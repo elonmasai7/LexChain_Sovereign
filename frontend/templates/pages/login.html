@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - LexChain Sovereign</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/public/css/design-tokens.css">
+  <link rel="stylesheet" href="/public/css/base.css">
+  <link rel="stylesheet" href="/public/css/components.css">
+  <link rel="stylesheet" href="/public/css/animations.css">
+  <link rel="stylesheet" href="/public/css/dark.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect fill='%233b82f6' width='32' height='32' rx='6'/><text x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' fill='white' font-size='18' font-weight='bold'>L</text></svg>">
+  <style>
+    body { background: var(--color-bg-secondary); }
+    .auth-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-6);
+    }
+    .auth-card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border-primary);
+      border-radius: var(--radius-xl);
+      padding: var(--space-8);
+      box-shadow: var(--shadow-lg);
+    }
+    .auth-header {
+      text-align: center;
+      margin-bottom: var(--space-8);
+    }
+    .auth-logo {
+      width: 48px;
+      height: 48px;
+      background: var(--color-accent);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: var(--text-2xl);
+      font-weight: var(--font-bold);
+      margin: 0 auto var(--space-4);
+    }
+    .auth-title {
+      font-size: var(--text-2xl);
+      font-weight: var(--font-bold);
+      margin-bottom: var(--space-2);
+    }
+    .auth-subtitle {
+      color: var(--color-text-secondary);
+      font-size: var(--text-sm);
+    }
+    .auth-form { display: flex; flex-direction: column; gap: var(--space-4); }
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      margin: var(--space-6) 0;
+      color: var(--color-text-tertiary);
+      font-size: var(--text-sm);
+    }
+    .auth-divider::before, .auth-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--color-border-secondary);
+    }
+    .wallet-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-3);
+      padding: var(--space-3);
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border-primary);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: var(--font-medium);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      width: 100%;
+    }
+    .wallet-btn:hover { background: var(--color-bg-tertiary); }
+    .auth-footer {
+      text-align: center;
+      margin-top: var(--space-6);
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+    }
+    .auth-footer a { color: var(--color-accent); font-weight: var(--font-medium); }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-card fade-in">
+      <div class="auth-header">
+        <div class="auth-logo">L</div>
+        <h1 class="auth-title">Welcome back</h1>
+        <p class="auth-subtitle">Sign in to access LexChain Sovereign</p>
+      </div>
+      
+      <form class="auth-form" id="login-form">
+        <div class="input-group">
+          <label class="input-label" for="email">Email</label>
+          <input type="email" id="email" name="email" class="input" placeholder="you@company.com" required>
+        </div>
+        
+        <div class="input-group">
+          <label class="input-label" for="password">Password</label>
+          <input type="password" id="password" name="password" class="input" placeholder="Enter your password" required>
+        </div>
+        
+        <div class="flex items-center justify-between">
+          <label class="checkbox">
+            <input type="checkbox" name="remember">
+            <span class="text-sm">Remember me</span>
+          </label>
+          <a href="/forgot-password" class="text-sm text-accent">Forgot password?</a>
+        </div>
+        
+        <div id="mfa-section" class="input-group" style="display: none;">
+          <label class="input-label">Verification Code</label>
+          <input type="text" name="mfa_code" class="input" placeholder="Enter 6-digit code" maxlength="6" pattern="[0-9]{6}">
+        </div>
+        
+        <button type="submit" class="btn btn-primary btn-lg w-full" id="login-btn">
+          Sign in
+        </button>
+      </form>
+      
+      <div class="auth-divider">or continue with</div>
+      
+      <button class="wallet-btn" id="wallet-btn">
+        <svg class="w-5 h-5"><use href="#icon-wallet"/></svg>
+        <span>Connect Wallet</span>
+      </button>
+      
+      <button class="wallet-btn" id="passkey-btn">
+        <svg class="w-5 h-5"><use href="#icon-key"/></svg>
+        <span>Sign in with Passkey</span>
+      </button>
+      
+      <div class="auth-footer">
+        Don't have an account? <a href="/register">Create one</a>
+      </div>
+    </div>
+  </div>
+  
+  <div id="toast-container" class="toast-container"></div>
+  
+  <script src="/public/js/app.js"></script>
+  <script src="/public/js/api.js"></script>
+  <script src="/public/js/web3.js"></script>
+  <script>
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('login-btn');
+      btn.classList.add('btn-loading');
+      
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      
+      try {
+        const result = await LexAPI.login(email, password);
+        if (result) {
+          window.location.href = '/dashboard';
+        }
+      } catch (error) {
+        LexApp.showToast('Invalid credentials', 'error');
+      } finally {
+        btn.classList.remove('btn-loading');
+      }
+    });
+    
+    document.getElementById('wallet-btn').addEventListener('click', async () => {
+      try {
+        await LexWeb3.connect();
+        LexApp.showToast('Wallet connected', 'success');
+      } catch (error) {
+        LexApp.showToast('Please install MetaMask', 'error');
+      }
+    });
+  </script>
+</body>
+</html>

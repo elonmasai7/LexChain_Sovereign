@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="LexChain Sovereign - AI-Powered Decentralized Legal Infrastructure">
+  <meta name="csrf-token" content="">
+  <title>{% block title %}LexChain Sovereign{% endblock %}</title>
+  
+  <!-- Preload fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/public/css/design-tokens.css">
+  <link rel="stylesheet" href="/public/css/base.css">
+  <link rel="stylesheet" href="/public/css/components.css">
+  <link rel="stylesheet" href="/public/css/layout.css">
+  <link rel="stylesheet" href="/public/css/pages.css">
+  <link rel="stylesheet" href="/public/css/animations.css">
+  <link rel="stylesheet" href="/public/css/dark.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect fill='%233b82f6' width='32' height='32' rx='6'/><text x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' fill='white' font-size='18' font-weight='bold'>L</text></svg>">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <div class="sidebar-logo-icon">L</div>
+          <span class="sidebar-logo-text">LexChain</span>
+        </div>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <div class="nav-section-title">Main</div>
+          <a href="/dashboard" class="nav-item {% if active_page == 'dashboard' %}active{% endif %}">
+            <svg class="nav-item-icon"><use href="#icon-dashboard"/></svg>
+            <span>Dashboard</span>
+          </a>
+          <a href="/assets" class="nav-item {% if active_page == 'assets' %}active{% endif %}">
+            <svg class="nav-item-icon"><use href="#icon-assets"/></svg>
+            <span>Assets</span>
+          </a>
+          <a href="/documents" class="nav-item {% if active_page == 'documents' %}active{% endif %}">
+            <svg class="nav-item-icon"><use href="#icon-documents"/></svg>
+            <span>Documents</span>
+            <span class="nav-item-badge">3</span>
+          </a>
+        </div>
+        
+        <div class="nav-section">
+          <div class="nav-section-title">Compliance</div>
+          <a href="/compliance" class="nav-item {% if active_page == 'compliance' %}active{% endif %}">
+            <svg class="nav-item-icon"><use href="#icon-compliance"/></svg>
+            <span>Compliance</span>
+          </a>
+          <a href="/governance" class="nav-item {% if active_page == 'governance' %}active{% endif %}">
+            <svg class="nav-item-icon"><use href="#icon-governance"/></svg>
+            <span>Governance</span>
+          </a>
+        </div>
+        
+        <div class="nav-section">
+          <div class="nav-section-title">Tools</div>
+          <a href="/legal-ai" class="nav-item {% if active_page == 'legal-ai' %}active{% endif %}">
+            <svg class="nav-item-icon"><use href="#icon-legal-ai"/></svg>
+            <span>Legal AI</span>
+          </a>
+          <a href="/evidence" class="nav-item {% if active_page == 'evidence' %}active{% endif %}">
+            <svg class="nav-item-icon"><use href="#icon-evidence"/></svg>
+            <span>Evidence Vault</span>
+          </a>
+          <a href="/did" class="nav-item {% if active_page == 'did' %}active{% endif %}">
+            <svg class="nav-item-icon"><use href="#icon-did"/></svg>
+            <span>Identity</span>
+          </a>
+        </div>
+        
+        <div class="nav-section">
+          <div class="nav-section-title">System</div>
+          <a href="/settings" class="nav-item {% if active_page == 'settings' %}active{% endif %}">
+            <svg class="nav-item-icon"><use href="#icon-settings"/></svg>
+            <span>Settings</span>
+          </a>
+          {% if user.role == 'super_admin' %}
+          <a href="/admin" class="nav-item {% if active_page == 'admin' %}active{% endif %}">
+            <svg class="nav-item-icon"><use href="#icon-admin"/></svg>
+            <span>Admin</span>
+          </a>
+          {% endif %}
+        </div>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="avatar">{{ user.initials or 'U' }}</div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name">{{ user.full_name or user.username }}</div>
+            <div class="sidebar-user-role">{{ user.role_display }}</div>
+          </div>
+          <button class="icon-btn" id="theme-toggle">
+            <svg class="w-5 h-5"><use href="#icon-moon"/></svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="icon-btn hide-desktop" id="sidebar-toggle">
+            <svg class="w-5 h-5"><use href="#icon-menu"/></svg>
+          </button>
+          <div class="relative">
+            <svg class="absolute left-3 top-2 w-4 h-4 text-tertiary"><use href="#icon-search"/></svg>
+            <input type="text" class="input search-input" placeholder="Search... (Ctrl+/)">
+          </div>
+        </div>
+        
+        <div class="topbar-right">
+          <button class="icon-btn" id="wallet-connect" onclick="LexApp.connectWallet()">
+            <svg class="w-5 h-5"><use href="#icon-wallet"/></svg>
+          </button>
+          <button class="icon-btn">
+            <svg class="w-5 h-5"><use href="#icon-bell"/></svg>
+            <span class="notification-badge"></span>
+          </button>
+          <a href="/settings" class="icon-btn">
+            <svg class="w-5 h-5"><use href="#icon-settings"/></svg>
+          </a>
+        </div>
+      </header>
+      
+      <div class="page-header">
+        <div class="page-header-content">
+          {% block page_header %}
+          <div>
+            <h1 class="page-title">{% block page_title %}Dashboard{% endblock %}</h1>
+            <p class="page-subtitle">{% block page_subtitle %}Welcome back, {{ user.full_name or user.username }}{% endblock %}</p>
+          </div>
+          <div class="page-actions">
+            {% block page_actions %}{% endblock %}
+          </div>
+          {% endblock %}
+        </div>
+      </div>
+      
+      <div class="page-body">
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+  </div>
+  
+  <!-- SVG Icons -->
+  {% include 'components/icons.html' %}
+  
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+  
+  <!-- Scripts -->
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  <script src="/public/js/app.js"></script>
+  <script src="/public/js/api.js"></script>
+  <script src="/public/js/charts.js"></script>
+  <script src="/public/js/web3.js"></script>
+  
+  {% block scripts %}{% endblock %}
+</body>
+</html>
